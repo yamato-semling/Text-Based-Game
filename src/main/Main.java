@@ -22,19 +22,22 @@ public class Main {
 
         print("Tell me your name.");
         player.name = scanner.nextLine();
+
         try {
             while (game) {
                 print(player.name+":");
                 String command = scanner.nextLine();
 
                 switch (command){
-                    case "quit":
+                    case "quit", "q":
                         print("Bye!");
                         game = false;
                         break;
                     case "name":
                         print("Your name is " + player.name + ".");
                         break;
+                    default:
+                        print("There is no such Command as " + command + ".");
                 }
             }
         } catch(IllegalStateException | NoSuchElementException e) {
