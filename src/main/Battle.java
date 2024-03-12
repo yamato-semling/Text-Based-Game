@@ -83,6 +83,15 @@ public class Battle {
                 case "move", "moves":
                     print("You can use atk to attack the enemy.");
                     break;
+                case "showskills", "showskill", "ss":
+                    for (int i = 0; i < skill.length; i++){
+                        if (player.skills[i]){
+                            SuperSkill s = skill[i];
+                            print("\nID:"+(i+1)+"\n"+ s.name+":\n"+s.desc+"\nCost: "+s.consume+" mp.");
+                        }
+                    }
+                    cF = true;
+                    break;
                 case "atk", "a":
                     pdmg = dmgCalc(player.atk, edef);
                     ehp = ehp - pdmg;
@@ -103,12 +112,12 @@ public class Battle {
                 case "skill", "s":
                     boolean skillSelect = true;
                     while (skillSelect){
+                        print("What skill do you want to use?");
                         int skillId = Integer.parseInt(scanner.nextLine());
-
-                        if (!(skillId > skillLength)){
+                        skillId = skillId - 1;
+                        if (!(skillId > (skill.length - 1))){
                             if(player.skills[skillId]){
                                 SuperSkill s = skill[skillId];
-
                                 switch (s.type){
                                     case 1:
                                         if(s.consume >= player.mp){
@@ -117,7 +126,7 @@ public class Battle {
                                             ehp = ehp - pdmg;
                                             print("\nYou used "+s.name+".\nYou dealt "+ pdmg +" damage to the enemy! It has "+ ehp +" hp left.");
                                         }else{
-                                            print("You don't have enough mana to use "+ s.name +". "+s.consume+"/"+player.mp);
+                                            print("You don't have enough mana to use "+ s.name +". "+s.consume+"/"+player.mp+"\nWhat is your move?");
                                             cF = true;
                                         }
                                         break;
@@ -128,17 +137,19 @@ public class Battle {
                                 }
                                 skillSelect = false;
                             }else {
-                                print("You haven't learnt the skill "+ skill +"yet.");
+                                print("You haven't learnt the skill "+ skill[skillId].name +"yet.\nWhat is your move?");
                                 cF = true;
+                                skillSelect = false;
                             }
                         }else {
-                            print("There is no such skill.");
+                            print("There is no such skill.\nWhat is your move?");
                             cF = true;
+                            skillSelect = false;
                         }
                     }
                     break;
                 default:
-                    print("No such command as "+ command +".");
+                    print("No such command as "+ command +".\nWhat is your move?");
                     cF = true;
                     break;
             }

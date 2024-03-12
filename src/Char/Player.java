@@ -1,6 +1,8 @@
 package Char;
 
-public class Player {
+import java.io.Serializable;
+
+public class Player implements Serializable {
 
     public String name;
     public int xp;

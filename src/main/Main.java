@@ -6,7 +6,7 @@ import Skills.HeavySlash;
 import Skills.MagicAttack;
 import Skills.SuperSkill;
 
-import java.io.IOException;
+import java.io.*;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
@@ -19,10 +19,46 @@ public class Main {
         System.out.println(content);
     }
 
+    public static void saveGame(){
+        Scanner scanner = new Scanner(System.in);
+        print("Your save file will be called: "+player.name+"-[\"YOUR INPUT\"].sav\nYour Input:");
+        String input = scanner.nextLine();
+        String savename = player.name+"-"+input+".sav";
+        try{
+            FileOutputStream fos = new FileOutputStream(savename);
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+            oos.writeObject(player);
+            oos.flush();
+            oos.close();
+            print("Game Saved as: "+savename);
+        }catch (Exception e){
+            print("Serialization Error! Can't save data\n"
+                    +e.getClass() + ": " + e.getMessage() + "\n");
+        }
+    }
+    public static void loadGame(){
+        Scanner scanner = new Scanner(System.in);
+        print("Name of your Character:");
+        String character = scanner.nextLine();
+        print("Your input:");
+        String input = scanner.nextLine();
+        String savename = character+"-"+input+".sav";
+        try{
+            FileInputStream fis = new FileInputStream(savename);
+            ObjectInputStream ois = new ObjectInputStream(fis);
+            player = (Player) ois.readObject();
+            ois.close();
+            print("Game Loaded");
+        }catch (Exception e){
+            print("Serialization Error! Can't load data\n"
+                    +e.getClass() + ": " + e.getMessage() + "\n");
+            System.exit(0);
+        }
+    }
+
     public static int nextLevel(int level){
         return (int) (level * 30 * 1.1);
     }
-
     public static void defaultSetup(){
         player.gold = 10;
         player.skills[0] = true;
@@ -58,7 +94,6 @@ public class Main {
     }
 
     public static SuperSkill[] skill = {new MagicAttack(), new HeavySlash()};
-    public static int skillLength = 2;
 
     public static void main(String[] args) throws IOException {
 
@@ -70,12 +105,12 @@ public class Main {
         String gameState = scanner.nextLine();
         gameState = gameState.toLowerCase();
 
-        if (gameState.equals("new") || gameState.equals("new game")){
+        if (gameState.equals("new") || gameState.equals("new game") || gameState.equals("n")){
             print("Tell me your name.");
             player.name = scanner.nextLine();
             defaultSetup();
-        }else if (gameState.equals("load") || gameState.equals("load game")) {
-
+        }else if (gameState.equals("load") || gameState.equals("load game") || gameState.equals("l")) {
+            loadGame();
         }else{
             print("No Such Command as "+ gameState +".");
             print("Terminating Process.");
@@ -92,6 +127,9 @@ public class Main {
                     case "quit", "q":
                         print("Bye!");
                         game = false;
+                        break;
+                    case "savegame", "save":
+                        saveGame();
                         break;
                     case "name":
                         print("Your name is " + player.name + ".");
