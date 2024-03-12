@@ -2,11 +2,11 @@ package Char;
 
 public class Slime extends SuperChar{
 
-    Slime(){
+    public Slime(){
         name = "Slime";
-        atk = 5;
-        def = 5;
+        atk = 10;
+        def = 10;
         hp = 10;
-        mp = 10;
+        mp = 5;
     }
 }

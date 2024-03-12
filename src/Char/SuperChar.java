@@ -7,5 +7,4 @@ public class SuperChar {
     public int def;
     public int hp;
     public int mp;
-
 }
