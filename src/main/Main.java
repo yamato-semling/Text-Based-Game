@@ -37,12 +37,21 @@ public class Main {
         }
     }
     public static void loadGame(){
-        Scanner scanner = new Scanner(System.in);
-        print("Name of your Character:");
-        String character = scanner.nextLine();
-        print("Your input:");
-        String input = scanner.nextLine();
-        String savename = character+"-"+input+".sav";
+        boolean load = true;
+        String savename = "";
+        while (load){
+            Scanner scanner = new Scanner(System.in);
+            print("Name of your Character:");
+            String character = scanner.nextLine();
+            print("Your input:");
+            String input = scanner.nextLine();
+            savename = character+"-"+input+".sav";
+            print("Is the file called: \""+savename+"\"?");
+            String conf = scanner.nextLine();
+            if(conf.equals("yes")|| conf.equals("y")){
+                load = false;
+            }
+        }
         try{
             FileInputStream fis = new FileInputStream(savename);
             ObjectInputStream ois = new ObjectInputStream(fis);
@@ -50,8 +59,8 @@ public class Main {
             ois.close();
             print("Game Loaded");
         }catch (Exception e){
-            print("Serialization Error! Can't load data\n"
-                    +e.getClass() + ": " + e.getMessage() + "\n");
+            print("\n\nNO SUCH FILE AS \""+ savename +"\", ABORTING PROCESS!\n\nSerialization Error! Can't load data\n"
+                    +e.getClass() + ": " + e.getMessage() +"\n");
             System.exit(0);
         }
     }
