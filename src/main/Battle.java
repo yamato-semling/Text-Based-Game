@@ -1,8 +1,8 @@
 package main;
 
 import Char.SuperChar;
+import Skills.SuperSkill;
 
-import java.util.Random;
 import java.util.Scanner;
 
 import static main.Main.*;
@@ -98,6 +98,43 @@ public class Battle {
                         print("\nYou dealt "+ pdmg +" damage to the enemy! It has "+ ehp +" hp left.");
                     }else {
                         print("You don't have enough mp to do that!");
+                    }
+                    break;
+                case "skill", "s":
+                    boolean skillSelect = true;
+                    while (skillSelect){
+                        int skillId = Integer.parseInt(scanner.nextLine());
+
+                        if (!(skillId > skillLength)){
+                            if(player.skills[skillId]){
+                                SuperSkill s = skill[skillId];
+
+                                switch (s.type){
+                                    case 1:
+                                        if(s.consume >= player.mp){
+                                            player.mp = player.mp - s.consume;
+                                            pdmg = dmgCalc(s.val, edef);
+                                            ehp = ehp - pdmg;
+                                            print("\nYou used "+s.name+".\nYou dealt "+ pdmg +" damage to the enemy! It has "+ ehp +" hp left.");
+                                        }else{
+                                            print("You don't have enough mana to use "+ s.name +". "+s.consume+"/"+player.mp);
+                                            cF = true;
+                                        }
+                                        break;
+                                    default:
+                                        print("Error");
+                                        cF = true;
+                                        break;
+                                }
+                                skillSelect = false;
+                            }else {
+                                print("You haven't learnt the skill "+ skill +"yet.");
+                                cF = true;
+                            }
+                        }else {
+                            print("There is no such skill.");
+                            cF = true;
+                        }
                     }
                     break;
                 default:

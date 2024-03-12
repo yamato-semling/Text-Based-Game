@@ -2,6 +2,9 @@ package main;
 
 import Char.Player;
 import Char.Slime;
+import Skills.HeavySlash;
+import Skills.MagicAttack;
+import Skills.SuperSkill;
 
 import java.io.IOException;
 import java.util.NoSuchElementException;
@@ -53,6 +56,9 @@ public class Main {
             return false;
         }
     }
+
+    public static SuperSkill[] skill = {new MagicAttack(), new HeavySlash()};
+    public static int skillLength = 2;
 
     public static void main(String[] args) throws IOException {
 

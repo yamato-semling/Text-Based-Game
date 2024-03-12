@@ -13,6 +13,6 @@ public class Player {
     public int mpMax;
     public int mp;
     public int gold;
-    public boolean[] skills = {true};
+    public boolean[] skills = {true, false};
 
 }
