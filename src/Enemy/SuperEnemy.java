@@ -1,6 +1,6 @@
-package Char;
+package Enemy;
 
-public class SuperChar {
+public class SuperEnemy {
 
     public String name;
     public int atk;

@@ -1,6 +1,6 @@
 package main;
 
-import Char.SuperChar;
+import Enemy.SuperEnemy;
 import Skills.SuperSkill;
 
 import java.util.Scanner;
@@ -34,7 +34,7 @@ public class Battle {
         return (int) (d / 4);
     }
 
-    public static void encounter(SuperChar enemy){
+    public static void encounter(SuperEnemy enemy){
         print("You see a random "+ enemy.name +" do you want to attack it?\n(yes or no?)");
 
         Scanner scanner = new Scanner(System.in);
@@ -57,7 +57,7 @@ public class Battle {
 
     }
 
-    public static void battle(SuperChar enemy){
+    public static void battle(SuperEnemy enemy){
         String ename = enemy.name;
         int eatk = enemy.atk;
         int edef = enemy.def;
@@ -137,7 +137,7 @@ public class Battle {
                                 }
                                 skillSelect = false;
                             }else {
-                                print("You haven't learnt the skill "+ skill[skillId].name +"yet.\nWhat is your move?");
+                                print("You haven't learnt the skill "+ skill[skillId].name +" yet.\nWhat is your move?");
                                 cF = true;
                                 skillSelect = false;
                             }

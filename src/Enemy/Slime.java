@@ -1,6 +1,6 @@
-package Char;
+package Enemy;
 
-public class Slime extends SuperChar{
+public class Slime extends SuperEnemy {
 
     public Slime(){
         name = "Slime";

@@ -1,7 +1,8 @@
 package main;
 
-import Char.Player;
-import Char.Slime;
+import Enemy.Slime;
+import Npc.Pater;
+import Npc.SuperNpc;
 import Skills.HeavySlash;
 import Skills.MagicAttack;
 import Skills.SuperSkill;
@@ -15,9 +16,8 @@ import static main.Battle.encounter;
 
 public class Main {
     static Player player = new Player();
-    public static void print(String content){
-        System.out.println(content);
-    }
+    public static void print(String content){System.out.println(content);}
+    public static void space(){System.out.println("\n\n\n");}
 
     public static void saveGame(){
         Scanner scanner = new Scanner(System.in);
@@ -63,6 +63,10 @@ public class Main {
                     +e.getClass() + ": " + e.getMessage() +"\n");
             System.exit(0);
         }
+    }
+
+    public static void importNpc(){
+        SuperNpc pater = new Pater();
     }
 
     public static int nextLevel(int level){
@@ -127,6 +131,9 @@ public class Main {
         }
 
         try {
+            importNpc();
+            space();
+            Pater.say(player.name+" you are finally awake.");
             while (game) {
                 print("\n"+ player.name+": Level "+ player.lvl +" "+ player.hp +"/"+ player.hpMax +" HP");
                 String command = scanner.nextLine();
