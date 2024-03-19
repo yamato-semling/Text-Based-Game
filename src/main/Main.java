@@ -16,6 +16,7 @@ import static main.Battle.encounter;
 
 public class Main {
     static Player player = new Player();
+    static Pater pater  = new Pater();
     public static void print(String content){System.out.println(content);}
     public static void space(){System.out.println("\n\n\n");}
 
@@ -38,9 +39,24 @@ public class Main {
     }
     public static void loadGame(){
         boolean load = true;
+        boolean will = true;
+        boolean z = true;
         String savename = "";
+        Scanner scanner = new Scanner(System.in);
+        while(z){
+            print("Do you want to load a gamefile?");
+            String swill = scanner.nextLine();
+            if (swill.equalsIgnoreCase("yes") || swill.equalsIgnoreCase("y")){
+                z = false;
+            }else if (swill.equalsIgnoreCase("no") || swill.equalsIgnoreCase("n")){
+                will = false;
+                load = false;
+                z = false;
+            }else {
+                print("Not a valid Input: Try \"Yes\" or \"No\".");
+            }
+        }
         while (load){
-            Scanner scanner = new Scanner(System.in);
             print("Name of your Character:");
             String character = scanner.nextLine();
             print("Your input:");
@@ -52,21 +68,19 @@ public class Main {
                 load = false;
             }
         }
-        try{
-            FileInputStream fis = new FileInputStream(savename);
-            ObjectInputStream ois = new ObjectInputStream(fis);
-            player = (Player) ois.readObject();
-            ois.close();
-            print("Game Loaded");
-        }catch (Exception e){
-            print("\n\nNO SUCH FILE AS \""+ savename +"\", ABORTING PROCESS!\n\nSerialization Error! Can't load data\n"
-                    +e.getClass() + ": " + e.getMessage() +"\n");
-            System.exit(0);
+        if (will){
+            try{
+                FileInputStream fis = new FileInputStream(savename);
+                ObjectInputStream ois = new ObjectInputStream(fis);
+                player = (Player) ois.readObject();
+                ois.close();
+                print("Game Loaded");
+            }catch (Exception e){
+                print("\n\nNO SUCH FILE AS \""+ savename +"\", ABORTING PROCESS!\n\nSerialization Error! Can't load data\n"
+                        +e.getClass() + ": " + e.getMessage() +"\n");
+                System.exit(0);
+            }
         }
-    }
-
-    public static void importNpc(){
-        SuperNpc pater = new Pater();
     }
 
     public static int nextLevel(int level){
@@ -106,6 +120,8 @@ public class Main {
         }
     }
 
+
+
     public static SuperSkill[] skill = {new MagicAttack(), new HeavySlash()};
 
     public static void main(String[] args) throws IOException {
@@ -131,11 +147,10 @@ public class Main {
         }
 
         try {
-            importNpc();
             space();
             Pater.say(player.name+" you are finally awake.");
             while (game) {
-                print("\n"+ player.name+": Level "+ player.lvl +" "+ player.hp +"/"+ player.hpMax +" HP");
+                print("\n"+ player.name+": Level "+ player.lvl +" | "+ player.hp +"/"+ player.hpMax +" HP | "+player.mp+"/"+player.mpMax+" MP");
                 String command = scanner.nextLine();
                 command = command.toLowerCase();
 
@@ -146,6 +161,9 @@ public class Main {
                         break;
                     case "savegame", "save":
                         saveGame();
+                        break;
+                    case "loadgame", "load":
+                        loadGame();
                         break;
                     case "name":
                         print("Your name is " + player.name + ".");
