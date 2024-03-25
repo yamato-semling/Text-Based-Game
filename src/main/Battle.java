@@ -120,7 +120,7 @@ public class Battle {
                                 SuperSkill s = skill[skillId];
                                 switch (s.type){
                                     case 1:
-                                        if(s.consume >= player.mp){
+                                        if(s.consume <= player.mp){
                                             player.mp = player.mp - s.consume;
                                             pdmg = dmgCalc(s.val, edef);
                                             ehp = ehp - pdmg;
@@ -163,7 +163,7 @@ public class Battle {
                 player.hp = player.hp - edmg;
                 print("The enemy dealt "+ edmg +" damage to you! You have "+ player.hp +" hp left.");
             }
-            print("\n"+ player.name+": Level "+ player.lvl +" "+ player.hp +"/"+ player.hpMax +" HP");
+            print("\n"+ player.name+": Level "+ player.lvl +" | "+ player.hp +"/"+ player.hpMax +" HP | "+player.mp+"/"+player.mpMax+" MP");
             print(ename + ": "+ ehp +"/"+ ehpMax +" HP");
             cF = false;
         }

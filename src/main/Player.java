@@ -16,5 +16,6 @@ public class Player implements Serializable {
     public int mp;
     public int gold;
     public boolean[] skills = {true, false};
+    public boolean[] areas = {true, false};
 
 }

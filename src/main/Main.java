@@ -1,22 +1,31 @@
 package main;
 
+import Enemy.LivingTree;
 import Enemy.Slime;
+import Enemy.SuperEnemy;
 import Npc.Pater;
-import Npc.SuperNpc;
 import Skills.HeavySlash;
 import Skills.MagicAttack;
 import Skills.SuperSkill;
+import Area.Forest;
+import Area.Plain;
+import Area.SuperArea;
 
 import java.io.*;
+import java.util.Arrays;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
-import static java.lang.Math.round;
 import static main.Battle.encounter;
 
 public class Main {
     static Player player = new Player();
     static Pater pater  = new Pater();
+
+    public static int randNum(int min,int max){
+        int range = max - min + 1;
+        return (int) ((Math.random() * range) + min);
+    }
     public static void print(String content){System.out.println(content);}
     public static void space(){System.out.println("\n\n\n");}
 
@@ -86,6 +95,12 @@ public class Main {
     public static int nextLevel(int level){
         return (int) (level * 30 * 1.1);
     }
+    public static int nextStat(int level){
+        float n = (float) level / 10;
+        float res = n * (500 + randNum(1, 25)) / 255;
+        return (int) res;
+    }
+
     public static void defaultSetup(){
         player.gold = 10;
         player.skills[0] = true;
@@ -109,6 +124,10 @@ public class Main {
             while (xpTotal > player.nextXp){
                 xpDif = xpTotal - player.nextXp;
                 player.lvl = player.lvl + 1;
+                player.hpMax = player.hpMax + nextStat(player.lvl);
+                player.hp = player.hpMax;
+                player.mpMax = player.mpMax + nextStat(player.lvl);
+                player.mp = player.mpMax;
                 xpTotal = xpDif;
                 player.nextXp = nextLevel(player.lvl);
             }
@@ -119,12 +138,37 @@ public class Main {
             return false;
         }
     }
-
-
-
     public static SuperSkill[] skill = {new MagicAttack(), new HeavySlash()};
+    public static SuperArea[] area = {new Plain(), new Forest()};
+
+    public static SuperArea getArea(){
+        int areaNum = 0;
+        for (int i = 0; i < player.areas.length; i ++){
+            boolean pAreaNum = player.areas[i];
+            if (pAreaNum){
+                areaNum = i;
+            }
+        }
+        return area[areaNum];
+    }
+
+
 
     public static void main(String[] args) throws IOException {
+
+        Commands[] commands;
+        commands = new Commands[8];
+
+        commands[0] = new Commands("help", "Shows this menu, with information of commands.");
+        commands[1] = new Commands("quit / q", "To quit the game.(Doesn't save.)");
+        commands[2] = new Commands("savegame / ssave", "Save the game.");
+        commands[3] = new Commands("loadgame / load", "Loads game from savefiles.");
+        commands[4] = new Commands("exp / xp","Shows your xp and xp needed for level up.");
+        commands[5] = new Commands("look / l","Look around and gather information of your surroundings.");
+        commands[6] = new Commands("goto / go","Move to another area.");
+        commands[7] = new Commands("move / m","Move and explorer the area.");
+
+
 
         boolean game = true;
         Scanner scanner = new Scanner(System.in);
@@ -159,6 +203,11 @@ public class Main {
                         print("Bye!");
                         game = false;
                         break;
+                    case "help", "h":
+                        for (Commands value : commands) {
+                            value.display();
+                        }
+                        break;
                     case "savegame", "save":
                         saveGame();
                         break;
@@ -174,8 +223,41 @@ public class Main {
                     case "xp", "exp":
                         print("Exp: "+ player.xp + " Exp needed for next level: "+ (player.nextXp - player.xp));
                         break;
-                    case "slime":
-                        encounter(new Slime());
+                    case "move", "m":
+                        SuperArea pArea = getArea();
+                        print("You move in the "+ pArea.name +".");
+                        int encChance = randNum(1, 100);
+                        if (encChance <= pArea.spawnRate){
+                            int enemyLen = pArea.enemy.length - 1;
+                            int enemyNum = randNum(0, enemyLen);
+                            SuperEnemy enemy = pArea.enemy[enemyNum];
+                            encounter(enemy);
+                        }
+                        break;
+                    case "look", "l":
+                        print(getArea().desc);
+                        break;
+                    case "go", "goto":
+                        print("Where to?");
+                        boolean loc = true;
+                        while (loc) {
+                            String location = scanner.nextLine();
+                            location = location.toLowerCase();
+                            switch (location){
+                                case "plain", "plains":
+                                    Arrays.fill(player.areas, false);
+                                    player.areas[0] = true;
+                                    loc = false;
+                                    break;
+                                case "forest":
+                                    Arrays.fill(player.areas, false);
+                                    player.areas[1] = true;
+                                    loc = false;
+                                    break;
+                                default:
+                                    print("No such Area!");
+                            }
+                        }
                         break;
                     case "getxp":
                         String s = (levelUp(10)) ? "level up!" : "not enough...";
@@ -195,4 +277,22 @@ public class Main {
             System.out.println("System.in was closed; exiting");
         }
     }
+
+    static class Commands {
+        public String name;
+        public String info;
+
+        Commands( String name, String info)
+        {
+            this.name = name;
+            this.info = info;
+
+        }
+
+        public void display()
+        {
+            print(name+":\n"+info+"\n\n");
+        }
+    }
+
 }
